@@ -1,0 +1,31 @@
+:root{--bg:#0b0d10;--card:#15181d;--fg:#e6edf3;--muted:#8a96a6;--accent:#00ff88;--danger:#ff4d4d}
+*{box-sizing:border-box;font-family:Inter,system-ui,sans-serif}
+body{margin:0;background:var(--bg);color:var(--fg);min-height:100vh}
+header{display:flex;gap:18px;padding:14px 24px;border-bottom:1px solid #20242b;background:#0e1115;position:sticky;top:0;z-index:10}
+header a{color:var(--muted);text-decoration:none;font-size:14px}
+header a.active{color:var(--accent)}
+main{padding:24px;display:flex;justify-content:center}
+.screen{display:none;width:100%;max-width:720px}
+.screen.active{display:block}
+.card{background:var(--card);border:1px solid #20242b;border-radius:14px;padding:24px}
+h1,h2{margin:0 0 12px}
+button{background:var(--accent);color:#000;border:none;padding:10px 18px;border-radius:8px;font-weight:600;cursor:pointer}
+button:disabled{opacity:.4;cursor:not-allowed}
+button.danger{background:var(--danger);color:#fff}
+input,select{width:100%;background:#0b0d10;border:1px solid #2a2f37;color:var(--fg);padding:10px;border-radius:8px;margin:6px 0}
+.row{display:flex;gap:8px;margin-top:14px}
+.muted{color:var(--muted);font-size:13px}
+.call-container{display:flex;gap:24px;justify-content:center;flex-wrap:wrap;padding:32px}
+.call-element{background:var(--card);border:1px solid #20242b;border-radius:14px;padding:18px;min-width:220px;text-align:center;transition:.2s}
+.call-element.connected{border-color:var(--accent);box-shadow:0 0 0 2px rgba(0,255,136,.15)}
+.avatar{width:80px;height:80px;border-radius:50%;background:#222}
+.status{margin-top:10px;color:var(--muted);font-size:14px}
+.mute-icon.hidden,.hidden{display:none!important}
+.context-menu{position:absolute;background:#1c1f25;border:1px solid #2a2f37;border-radius:8px;padding:4px;z-index:1000}
+.context-menu button{display:block;width:100%;background:transparent;color:var(--fg);text-align:left;padding:8px 12px;border-radius:4px}
+.context-menu button:hover{background:#2a2f37}
+.call-controls{display:flex;gap:12px;justify-content:center;align-items:center;padding:16px}
+.timer{font-variant-numeric:tabular-nums;color:var(--accent);font-weight:700}
+.spinner{width:42px;height:42px;border:3px solid #2a2f37;border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite;margin:18px auto}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-icon{width:18px;height:18px;animation:spin 1s linear infinite}

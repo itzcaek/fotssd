@@ -1,0 +1,13 @@
+{
+  "name": "forgotten-society",
+  "version": "2.0.0",
+  "description": "Voice MITM client for nekto.me audio chat",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "tokens": "node tools/get-tokens.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}

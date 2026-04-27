@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Forgotten Society — MITM Audio</title>
+<link rel="stylesheet" href="style.css">
+<!-- socket.io 2.x — той же мажор-версии, что у nekto.me audio gateway -->
+<script src="https://cdn.socket.io/socket.io-2.4.0.js"></script>
+</head>
+<body>
+<header>
+    <a href="#" data-screen="welcome" class="active">Главная</a>
+    <a href="#" data-screen="options">Настройки</a>
+    <a href="#" data-screen="token">Токены</a>
+    <a href="#" data-screen="logs">Логи</a>
+</header>
+
+<main>
+    <!-- WARNING -->
+    <section id="warning-screen" class="screen">
+        <div class="card">
+            <h1>⚠️ Forgotten Society MITM</h1>
+            <p>Двухсторонний audio-MITM для nekto.me. Используй на свой страх и риск.</p>
+            <button class="back-button">2.5 с.</button>
+        </div>
+    </section>
+
+    <!-- WELCOME -->
+    <section id="welcome-screen" class="screen">
+        <div class="card">
+            <h1>Forgotten Society</h1>
+            <p>Соедини двух случайных собеседников. Микс пишется в webm/opus.</p>
+            <button class="start-button">Начать</button>
+            <button class="init-button" style="margin-top:8px">Инициализировать</button>
+        </div>
+    </section>
+
+    <!-- OPTIONS -->
+    <section id="options-screen" class="screen">
+        <div class="card">
+            <h2>Настройки поиска</h2>
+
+            <label>Пол: 
+                <select id="search-sex">
+                    <option value="M">Мужской</option>
+                    <option value="F">Женский</option>
+                </select>
+            </label>
+
+            <label>Желаемый пол собеседника: 
+                <select id="search-wish-sex">
+                    <option value="A">Не важно</option>
+                    <option value="M">Мужской</option>
+                    <option value="F">Женский</option>
+                </select>
+            </label>
+
+            <label>Возраст: 
+                <input type="text" id="search-age" value="18,44">
+            </label>
+
+            <hr>
+            <label><input type="checkbox" id="switch-autorestart"> Автоперезапуск после разрыва</label><br>
+            <label><input type="checkbox" id="switch-refind"> Перепоиск собеседника</label>
+
+            <div class="row">
+                <button class="back-button">Назад</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- TOKEN -->
+    <section id="token-screen" class="screen">
+        <div class="card">
+            <h2>Токены nekto.me (user_id двух гостевых аккаунтов)</h2>
+            <p class="muted">Получить можно через <code>tools/get-tokens.js</code> или из DevTools на nekto.me/audiochat (WS query <code>token</code>).</p>
+            <input id="first-token-input" placeholder="Токен #1 (Клиент 1 ↔ Собеседник 1)">
+            <input id="second-token-input" placeholder="Токен #2 (Клиент 2 ↔ Собеседник 2)">
+            <div class="row">
+                <button id="save-btn" disabled>Сохранить</button>
+                <button id="save-dialog">Сохранить (alt)</button>
+                <button class="back-button">Назад</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="token-fail-screen" class="screen">
+        <div class="card"><h2>Токены невалидны</h2><button class="back-button">Назад</button></div>
+    </section>
+
+    <!-- WAITING -->
+    <section id="waiting-screen" class="screen">
+        <div class="card">
+            <h2>Перезапуск...</h2>
+            <div class="spinner"></div>
+            <button id="back-auto-restart" class="back-to-options-btn">Отмена</button>
+        </div>
+    </section>
+
+    <!-- CALL -->
+    <section id="call-screen" class="screen">
+        <div class="call-container"></div>
+        <div class="call-controls">
+            <span class="timer">00:00</span>
+            <button id="mute-btn" class="bi bi-mic-mute">Mute</button>
+            <button id="restart-btn" class="restart-button">Рестарт</button>
+            <button id="save-audio-btn">💾 Скачать диалог</button>
+        </div>
+    </section>
+
+    <!-- END -->
+    <section id="end-screen" class="screen">
+        <div class="card">
+            <h2>Диалог завершён</h2>
+            <button id="save-audio-btn-2" onclick="window.room.downloadLastDialog()">Скачать запись</button>
+            <button class="back-button">На главную</button>
+        </div>
+    </section>
+
+    <!-- MIC ERROR -->
+    <section id="microphone-error-screen" class="screen">
+        <div class="card">
+            <h2>Ошибка микрофона</h2>
+            <p>Разреши доступ к микрофону или открой через https/localhost.</p>
+            <button class="back-button">Назад</button>
+        </div>
+    </section>
+</main>
+
+<script src="index.js"></script>
+</body>
+</html>
