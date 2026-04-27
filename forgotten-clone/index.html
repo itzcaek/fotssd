@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forgotten Society Clone</title>
+    
+    <!-- Шрифт Monocraft -->
+    <style>
+        @font-face {
+            font-family: 'Monocraft';
+            src: url('fonts/Monocraft.ttf') format('truetype');
+            font-weight: normal;
+        }
+        @font-face {
+            font-family: 'Monocraft';
+            src: url('fonts/Monocraft-Bold.ttf') format('truetype');
+            font-weight: bold;
+        }
+    </style>
+
+    <!-- Стили -->
+    <style>
+        :root {
+            --green-1: #00ff88;
+            --bg-dark: #0a0a0a;
+            --font-mono: 'Monocraft', 'Courier New', monospace;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background-color: var(--bg-dark);
+            color: #fff;
+            font-family: var(--font-mono);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        header {
+            display: block;
+            z-index: 100;
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 800px;
+            background-color: rgba(0, 0, 0, 0.9);
+            box-shadow: 0 0 40px rgba(0, 255, 136, 0.15), 0 20px 60px rgba(0, 0, 0, 0.6);
+            border-radius: 7px;
+            border: 1px solid rgba(0, 255, 136, 0.3);
+        }
+
+        header .header-list {
+            list-style-type: none;
+            display: flex;
+            justify-content: space-around;
+            padding: 15px;
+            margin: 0;
+        }
+
+        header .header-list .header-el { margin: 0 10px; }
+
+        header .header-list .header-el a {
+            font-family: var(--font-mono);
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: white;
+            transition: 0.3s;
+            font-weight: 700;
+            font-size: 14px;
+            padding: 8px 12px;
+            border-radius: 4px;
+        }
+
+        header .header-list .header-el a img {
+            margin-right: 8px;
+            width: 20px;
+            height: 20px;
+            border-radius: 15%;
+        }
+
+        header .header-list .header-el a:hover {
+            color: var(--green-1);
+            background: rgba(0, 255, 136, 0.1);
+        }
+
+        header .header-list .header-el a.active {
+            color: var(--green-1);
+            text-shadow: 0 0 10px var(--green-1);
+        }
+
+        header .header-list .header-el a.special {
+            color: var(--green-1);
+            text-shadow: 0 0 20px var(--green-1);
+            border: 1px solid var(--green-1);
+        }
+
+        /* Screens */
+        .screen {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            padding: 20px;
+            background: var(--bg-dark);
+        }
+
+        .screen.active { display: flex; }
+
+        h1 {
+            font-size: 32px;
+            margin-bottom: 30px;
+            color: var(--green-1);
+            text-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+        }
+
+        h2 { font-size: 24px; margin-bottom: 20px; color: #fff; }
+        h3 { font-size: 18px; margin: 15px 0 10px; color: var(--green-1); }
+        p { margin: 10px 0; color: #ccc; }
+
+        /* Buttons */
+        button {
+            padding: 12px 24px;
+            margin: 8px;
+            background: transparent;
+            border: 2px solid var(--green-1);
+            color: var(--green-1);
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: var(--font-mono);
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            background: var(--green-1);
+            color: #000;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+        }
+
+        button:disabled { opacity: 0.5; cursor: not-allowed; }
+        button.danger { border-color: #ff4444; color: #ff4444; }
+        button.danger:hover { background: #ff4444; color: #fff; }
+
+        /* Inputs & Selects */
+        input, select {
+            padding: 12px;
+            margin: 8px;
+            width: 100%;
+            max-width: 400px;
+            border-radius: 4px;
+            border: 2px solid #333;
+            background: #111;
+            color: #fff;
+            font-family: var(--font-mono);
+            font-size: 14px;
+        }
+
+        input:focus, select:focus { outline: none; border-color: var(--green-1); }
+        
+        select option {
+            background: #111;
+            color: #fff;
+        }
+
+        /* Search Criteria */
+        .search-criteria {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            border-radius: 7px;
+            padding: 15px;
+            margin: 15px 0;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .criteria-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 10px 0;
+            flex-wrap: wrap;
+        }
+
+        .criteria-row label {
+            color: #aaa;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+
+        .criteria-row select,
+        .criteria-row input {
+            flex: 1;
+            min-width: 120px;
+            margin: 0;
+        }
+
+        /* Switches */
+        .switches {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .switches label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .switches input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--green-1);
+        }
+
+        /* Call Screen */
+        .call-container {
+            display: flex;
+            gap: 20px;
+            margin-top: 100px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .call-element {
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid var(--green-1);
+            padding: 20px;
+            border-radius: 7px;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.2);
+            min-width: 200px;
+            text-align: center;
+            position: relative;
+        }
+
+        .call-element.connected { box-shadow: 0 0 40px rgba(0, 255, 136, 0.4); }
+
+        .avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin: 10px auto;
+            background: #222;
+            border: 2px solid var(--green-1);
+        }
+
+        .status { margin: 10px 0; font-size: 14px; color: #aaa; }
+        .mute-icon { position: absolute; top: 10px; right: 10px; font-size: 20px; }
+        .mute-icon.hidden { display: none; }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        /* Context Menu */
+        .context-menu {
+            position: absolute;
+            background: #111;
+            border: 1px solid var(--green-1);
+            border-radius: 4px;
+            padding: 5px 0;
+            z-index: 1000;
+            min-width: 150px;
+        }
+
+        .context-menu.hidden { display: none; }
+        .context-menu button {
+            display: block;
+            width: 100%;
+            text-align: left;
+            margin: 0;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 0;
+            background: transparent;
+        }
+        .context-menu button:hover { background: rgba(0, 255, 136, 0.2); }
+        .context-menu hr { border: none; border-top: 1px solid #333; margin: 5px 0; }
+
+        /* Timer */
+        .timer { font-size: 24px; color: var(--green-1); margin: 20px 0; }
+
+        /* Loader */
+        .loader {
+            width: 40px; height: 40px;
+            border: 3px solid #333;
+            border-top: 3px solid var(--green-1);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 20px;
+        }
+
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* Floating */
+        .floating-nick {
+            position: fixed;
+            pointer-events: none;
+            animation: float-up 5s ease-out forwards;
+            z-index: 5;
+        }
+
+        @keyframes float-up {
+            0% { opacity: 0; transform: translateY(0); }
+            20% { opacity: 1; }
+            80% { opacity: 1; }
+            100% { opacity: 0; transform: translateY(-100px); }
+        }
+
+        @media (max-width: 768px) {
+            header { width: 95%; top: 10px; }
+            .header-list { flex-wrap: wrap; }
+            .call-container { flex-direction: column; margin-top: 80px; }
+            h1 { font-size: 24px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <ul class="header-list">
+            <li class="header-el">
+                <a href="#" class="active" data-screen="welcome">
+                    <img src="https://placehold.co/20x20/00ff88/000000?text=H" alt="Home"> Главная
+                </a>
+            </li>
+            <li class="header-el">
+                <a href="#" class="special" data-screen="call">
+                    <img src="https://placehold.co/20x20/00ff88/000000?text=A" alt="Audio"> Voice MITM
+                </a>
+            </li>
+            <li class="header-el">
+                <a href="#" data-screen="logs">
+                    <img src="https://placehold.co/20x20/00ff88/000000?text=L" alt="Logs"> Логи
+                </a>
+            </li>
+        </ul>
+    </header>
+
+    <!-- Warning Screen -->
+    <div id="warning-screen" class="screen">
+        <h2>⚠️ ВНИМАНИЕ</h2>
+        <p>Используйте только в образовательных целях.</p>
+        <button class="back-button" disabled>ПОНЯТНО</button>
+    </div>
+
+    <!-- Welcome Screen -->
+    <div id="welcome-screen" class="screen active">
+        <h1>FORGOTTEN SOCIETY</h1>
+        <button class="start-button">НАЧАТЬ</button>
+    </div>
+
+<!-- Options Screen -->
+<div id="options-screen" class="screen">
+    <h2>НАСТРОЙКИ</h2>
+    
+    <div class="token-inputs">
+        <input type="text" id="first-token" placeholder="Токен 1 (Leader)">
+        <input type="text" id="second-token" placeholder="Токен 2 (Follower)">
+        <!-- ✅ ID изменён на save-options-btn -->
+        <button id="save-options-btn">Сохранить токены</button>
+    </div>
+
+    <div class="search-criteria">
+        <h3>Параметры поиска</h3>
+        <div class="criteria-row">
+            <label>Ваш пол:</label>
+            <select id="search-sex">
+                <option value="M">Мужской</option>
+                <option value="F">Женский</option>
+            </select>
+        </div>
+        <div class="criteria-row">
+            <label>Искать:</label>
+            <select id="search-wish-sex">
+                <option value="F">Женский</option>
+                <option value="M">Мужской</option>
+                <option value="A">Любой</option>
+            </select>
+        </div>
+        <div class="criteria-row">
+            <label>Возраст:</label>
+    <select id="search-age">
+        <option value="18,44">18-44</option>
+        <option value="0,17">До 18</option>
+        <option value="45,120">45+</option>
+    </select>
+        </div>
+    </div>
+
+    <div class="switches">
+        <label><input type="checkbox" id="switch-autorestart"> Автоперезапуск</label>
+        <label><input type="checkbox" id="switch-refind"> Автопоиск</label>
+    </div>
+
+    <button class="init-button">ЗАПУСТИТЬ</button>
+    <button class="back-button">НАЗАД</button>
+</div>
+
+    <!-- Waiting Screen -->
+    <div id="waiting-screen" class="screen">
+        <div class="loader"></div>
+        <p>ПОИСК СОБЕСЕДНИКОВ...</p>
+        <button id="back-auto-restart">ОТМЕНА</button>
+    </div>
+
+    <!-- Call Screen -->
+    <div id="call-screen" class="screen">
+        <div class="timer">00:00</div>
+        <div class="call-container"></div>
+        <div class="controls">
+            <button id="mute-btn">🔇 МИКРОФОН</button>
+            <button id="restart-btn">🔄 ПЕРЕЗАПУСК</button>
+            <button class="back-to-options-btn">⚙️ НАСТРОЙКИ</button>
+            <button id="save-audio-btn">💾 СОХРАНИТЬ</button>
+        </div>
+    </div>
+
+    <!-- End Screen -->
+    <div id="end-screen" class="screen">
+        <h2>ДИАЛОГ ЗАВЕРШЕН</h2>
+        <button class="restart-button">НОВЫЙ ПОИСК</button>
+        <button class="back-to-options-btn">НАСТРОЙКИ</button>
+    </div>
+
+    <!-- Microphone Error Screen -->
+    <div id="microphone-error-screen" class="screen">
+        <h2>❌ ОШИБКА МИКРОФОНА</h2>
+        <p>Разрешите доступ к микрофону в настройках браузера.</p>
+        <button class="back-button">ПОНЯТНО</button>
+    </div>
+
+    <!-- Token Screen -->
+<div id="token-screen" class="screen">
+    <h2>ВВЕДИТЕ ТОКЕНЫ</h2>
+    <input type="text" id="first-token-input" placeholder="Токен 1">
+    <input type="text" id="second-token-input" placeholder="Токен 2">
+    <button id="save-btn">СОХРАНИТЬ</button>
+    <button class="back-button">НАЗАД</button>
+    </div>
+
+    <!-- Token Fail Screen -->
+    <div id="token-fail-screen" class="screen">
+        <h2>❌ ОШИБКА ТОКЕНОВ</h2>
+        <p>Неверные токены или истек срок действия.</p>
+        <button class="back-button">ПОВТОРИТЬ</button>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.socket.io/socket.io-2.3.0.js"></script>
+    <script src="index.js"></script>
+</body>
+</html>
